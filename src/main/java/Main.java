@@ -3,6 +3,8 @@ package main.java;
 import main.java.model.Usuario;
 import main.java.model.Livro;
 import main.java.service.BibliotecaService;
+import main.java.model.Emprestimo;
+import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args) {
@@ -20,6 +22,20 @@ public class Main {
         BibliotecaService biblioteca = new BibliotecaService();
         biblioteca.cadastrarUsuario(usuario);
         biblioteca.cadastrarLivro(livro);
+
+
+        Emprestimo emprestimo = new Emprestimo(
+            1,
+            usuario,
+            livro,
+            LocalDate.now(),
+            LocalDate.now().plusDays(7)
+        );
+        biblioteca.realizarEmprestimo(emprestimo);
+
+        System.out.println("Empréstimos realizados: " + biblioteca.getEmprestimos().size());
+
+        System.out.println("Livros disponíveis: " + livro.getQtd());
         System.out.println("Usuários cadastrados: " + biblioteca.getUsuarios().size());
         System.out.println("Livros cadastrados: " + biblioteca.getLivros().size());
 
