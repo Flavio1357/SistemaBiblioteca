@@ -5,6 +5,7 @@ import main.java.model.Usuario;
 import main.java.model.Livro;
 import main.java.model.Emprestimo;
 import main.java.exception.LivroIndisponivelException;
+import main.java.exception.UsuarioInvalidoException;
 import main.java.model.StatusEmprestimo;
 import java.util.List;
 import java.util.Collections;
@@ -32,8 +33,17 @@ public class BibliotecaService {
         return Collections.unmodifiableList(emprestimos);
     }
 
-    public void cadastrarUsuario(Usuario usuario) {
+    public void cadastrarUsuario(Usuario usuario) throws UsuarioInvalidoException {
+        if(usuario.getNome() == null || usuario.getNome().isBlank()){
+            throw new UsuarioInvalidoException("Nome do usuário é obrigatório.");
+        }
+
+        if(usuario.getEmail() == null || usuario.getEmail().isBlank()){
+            throw new UsuarioInvalidoException("Email do usúario é obrigatório.");
+        }
+
         usuarios.add(usuario);
+        
     }
 
     public void cadastrarLivro(Livro livro) {

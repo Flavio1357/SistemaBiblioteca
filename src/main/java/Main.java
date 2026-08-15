@@ -6,12 +6,13 @@ import main.java.service.BibliotecaService;
 import main.java.model.Emprestimo;
 import java.time.LocalDate;
 import main.java.exception.LivroIndisponivelException;
+import main.java.exception.UsuarioInvalidoException;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Sistema de Biblioteca");
 
-        Usuario usuario = new Usuario(1, "Flavio", "flavio@email.com");
+        Usuario usuario = new Usuario(1, "Flávio", "flavio@email.com");
         Livro livro = new Livro(
             1,
             "Clean Code",
@@ -21,7 +22,12 @@ public class Main {
         );
 
         BibliotecaService biblioteca = new BibliotecaService();
-        biblioteca.cadastrarUsuario(usuario);
+        try {
+            biblioteca.cadastrarUsuario(usuario);
+            System.out.println("Usuário Cadastrado com sucesso.");
+        } catch (UsuarioInvalidoException e) {
+            System.out.println(e.getMessage());
+        }
         biblioteca.cadastrarLivro(livro);
 
 
