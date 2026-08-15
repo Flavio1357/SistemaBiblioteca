@@ -6,6 +6,7 @@ import main.java.model.Livro;
 import main.java.model.Emprestimo;
 import main.java.exception.LivroIndisponivelException;
 import main.java.model.StatusEmprestimo;
+import java.util.List;
 
 public class BibliotecaService {
     private ArrayList<Usuario> usuarios;
@@ -18,15 +19,15 @@ public class BibliotecaService {
         emprestimos = new ArrayList<>();
     }
 
-    public ArrayList<Usuario> getUsuarios() {
+    public List<Usuario> getUsuarios() {
         return usuarios;
     }
 
-    public ArrayList<Livro> getLivros() {
+    public List<Livro> getLivros() {
         return livros;
     }
 
-    public ArrayList<Emprestimo> getEmprestimos() {
+    public List<Emprestimo> getEmprestimos() {
         return emprestimos;
     }
 
