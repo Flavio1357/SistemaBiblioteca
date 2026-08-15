@@ -5,6 +5,7 @@ import main.java.model.Usuario;
 import main.java.model.Livro;
 import main.java.model.Emprestimo;
 import main.java.exception.LivroIndisponivelException;
+import main.java.model.StatusEmprestimo;
 
 public class BibliotecaService {
     private ArrayList<Usuario> usuarios;
@@ -56,5 +57,17 @@ public class BibliotecaService {
 
         emprestimos.add(emprestimo);
         emprestimo.getLivro().setQtd(emprestimo.getLivro().getQtd() - 1);
+    }
+
+    public void devolverLivro(Emprestimo emprestimo) {
+
+        if (emprestimo.getStatus() == StatusEmprestimo.DEVOLVIDO) {
+            System.out.println("Este empréstimo já foi devolvido.");
+            return;
+        }
+
+        emprestimo.devolver();
+
+        emprestimo.getLivro().setQtd(emprestimo.getLivro().getQtd() + 1);
     }
 }

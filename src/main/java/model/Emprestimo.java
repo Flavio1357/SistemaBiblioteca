@@ -8,6 +8,7 @@ public class Emprestimo {
     private Livro livro;
     private LocalDate dataEmprestimo;
     private LocalDate dataDevolucao;
+    private StatusEmprestimo status;
 
     public Emprestimo(int id, Usuario usuario, Livro livro, LocalDate dataEmprestimo, LocalDate dataDevolucao){
         this.id = id;
@@ -15,6 +16,7 @@ public class Emprestimo {
         this.livro = livro;
         this.dataEmprestimo = dataEmprestimo;
         this.dataDevolucao = dataDevolucao;
+        this.status = StatusEmprestimo.ATIVO;
     }
 
     public int getId() {
@@ -46,5 +48,13 @@ public class Emprestimo {
     }
     public void setDataDevolucao(LocalDate dataDevolucao) {
         this.dataDevolucao = dataDevolucao;
+    }
+
+    public StatusEmprestimo getStatus() {
+        return status;
+    }
+
+    public void devolver() {
+        this.status = StatusEmprestimo.DEVOLVIDO;
     }
 }

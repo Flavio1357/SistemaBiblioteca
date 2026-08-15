@@ -17,7 +17,7 @@ public class Main {
             "Clean Code",
             "Robert C. Martin",
             2008,
-            0
+            5
         );
 
         BibliotecaService biblioteca = new BibliotecaService();
@@ -40,6 +40,19 @@ public class Main {
         } catch (LivroIndisponivelException e){
             System.out.println(e.getMessage());
         }
+
+        biblioteca.devolverLivro(emprestimo);
+
+System.out.println("Status do empréstimo: "
+        + emprestimo.getStatus());
+
+System.out.println("Livros disponíveis após devolução: "
+        + livro.getQtd());
+
+        biblioteca.devolverLivro(emprestimo);
+
+System.out.println("Livros disponíveis após segunda devolução: "
+        + livro.getQtd());
 
         System.out.println("Empréstimos realizados: " + biblioteca.getEmprestimos().size());
 
