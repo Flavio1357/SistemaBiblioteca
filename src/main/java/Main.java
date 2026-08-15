@@ -7,6 +7,7 @@ import main.java.model.Emprestimo;
 import java.time.LocalDate;
 import main.java.exception.LivroIndisponivelException;
 import main.java.exception.UsuarioInvalidoException;
+import main.java.exception.LivroInvalidoException;
 
 public class Main {
     public static void main(String[] args) {
@@ -28,7 +29,12 @@ public class Main {
         } catch (UsuarioInvalidoException e) {
             System.out.println(e.getMessage());
         }
-        biblioteca.cadastrarLivro(livro);
+        try {
+            biblioteca.cadastrarLivro(livro);
+            System.out.println("Livro cadastrado com sucesso!");
+        } catch (LivroInvalidoException e){
+            System.out.println(e.getMessage());
+        }
 
 
         Emprestimo emprestimo = new Emprestimo(

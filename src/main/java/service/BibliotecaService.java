@@ -6,6 +6,7 @@ import main.java.model.Livro;
 import main.java.model.Emprestimo;
 import main.java.exception.LivroIndisponivelException;
 import main.java.exception.UsuarioInvalidoException;
+import main.java.exception.LivroInvalidoException;
 import main.java.model.StatusEmprestimo;
 import java.util.List;
 import java.util.Collections;
@@ -39,14 +40,26 @@ public class BibliotecaService {
         }
 
         if(usuario.getEmail() == null || usuario.getEmail().isBlank()){
-            throw new UsuarioInvalidoException("Email do usúario é obrigatório.");
+            throw new UsuarioInvalidoException("Email do usuário é obrigatório.");
         }
 
         usuarios.add(usuario);
         
     }
 
-    public void cadastrarLivro(Livro livro) {
+    public void cadastrarLivro(Livro livro) throws LivroInvalidoException {
+        if(livro.getTitulo() == null || livro.getTitulo().isBlank()){
+            throw new LivroInvalidoException("Título do livro é obrigatório.");
+        }
+
+        if(livro.getAutor() == null || livro.getAutor().isBlank()){
+            throw new LivroInvalidoException("Autor do Livro é obrigatório.");
+        }
+
+        if(livro.getQtd() < 0) {
+            throw new LivroInvalidoException("A quantidade do livro não pode ser negativa.");
+        }
+
         livros.add(livro);
     }
 
