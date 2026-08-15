@@ -5,6 +5,7 @@ import main.java.model.Livro;
 import main.java.service.BibliotecaService;
 import main.java.model.Emprestimo;
 import java.time.LocalDate;
+import main.java.exception.LivroIndisponivelException;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,7 +17,7 @@ public class Main {
             "Clean Code",
             "Robert C. Martin",
             2008,
-            5
+            0
         );
 
         BibliotecaService biblioteca = new BibliotecaService();
@@ -31,7 +32,14 @@ public class Main {
             LocalDate.now(),
             LocalDate.now().plusDays(7)
         );
-        biblioteca.realizarEmprestimo(emprestimo);
+        try {
+            biblioteca.realizarEmprestimo(emprestimo);
+
+            System.out.println("Empréstimo realizado com sucesso!");
+            System.out.println("Livros disponiveis: " + livro.getQtd());
+        } catch (LivroIndisponivelException e){
+            System.out.println(e.getMessage());
+        }
 
         System.out.println("Empréstimos realizados: " + biblioteca.getEmprestimos().size());
 

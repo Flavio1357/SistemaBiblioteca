@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import main.java.model.Usuario;
 import main.java.model.Livro;
 import main.java.model.Emprestimo;
+import main.java.exception.LivroIndisponivelException;
 
 public class BibliotecaService {
     private ArrayList<Usuario> usuarios;
@@ -48,10 +49,9 @@ public class BibliotecaService {
         livros.add(livro);
     }
 
-    public void realizarEmprestimo(Emprestimo emprestimo) {
+    public void realizarEmprestimo(Emprestimo emprestimo) throws LivroIndisponivelException {
         if(emprestimo.getLivro().getQtd() <= 0){
-            System.out.println("Livro Indisponivel");
-            return;
+            throw new LivroIndisponivelException("Livro indisponível.");
         }
 
         emprestimos.add(emprestimo);
