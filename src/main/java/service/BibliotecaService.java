@@ -54,7 +54,7 @@ public class BibliotecaService {
         
     }
 
-    public void cadastrarLivro(Livro livro) throws LivroInvalidoException {
+    public void cadastrarLivro(Livro livro) throws LivroInvalidoException, IdDuplicadoException {
         if(livro.getTitulo() == null || livro.getTitulo().isBlank()){
             throw new LivroInvalidoException("Título do livro é obrigatório.");
         }
@@ -66,6 +66,13 @@ public class BibliotecaService {
         if(livro.getQtd() < 0) {
             throw new LivroInvalidoException("A quantidade do livro não pode ser negativa.");
         }
+
+        if (livroComIdExiste(livro.getId())) {
+            throw new IdDuplicadoException(
+                "Já existe um livro com o ID " + livro.getId()
+            );
+        }
+
 
         livros.add(livro);
     }
@@ -89,5 +96,14 @@ public class BibliotecaService {
         emprestimo.devolver();
 
         emprestimo.getLivro().setQtd(emprestimo.getLivro().getQtd() + 1);
+    }
+
+    private boolean livroComIdExiste(int id) {
+        for(Livro livro : livros) {
+            if(livro.getId() == id){
+                return true;
+            }
+        }
+        return false;
     }
 }

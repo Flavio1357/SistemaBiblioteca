@@ -30,6 +30,22 @@ public class Main {
     "joao@email.com"
 );
 
+Livro livro1 = new Livro(
+    1,
+    "Clean Code",
+    "Robert C. Martin",
+    2008,
+    5
+);
+
+Livro livro2 = new Livro(
+    1,
+    "Java Efetivo",
+    "Joshua Bloch",
+    2018,
+    3
+);
+
         BibliotecaService biblioteca = new BibliotecaService();
         try {
             biblioteca.cadastrarUsuario(usuario);
@@ -38,9 +54,9 @@ public class Main {
             System.out.println(e.getMessage());
         }
         try {
-            biblioteca.cadastrarLivro(livro);
+            biblioteca.cadastrarLivro(livro1);
             System.out.println("Livro cadastrado com sucesso!");
-        } catch (LivroInvalidoException e){
+        } catch (LivroInvalidoException | IdDuplicadoException e){
             System.out.println(e.getMessage());
         }
 
@@ -51,9 +67,9 @@ public class Main {
             System.out.println(e.getMessage());
         }
         try {
-            biblioteca.cadastrarLivro(livro);
+            biblioteca.cadastrarLivro(livro2);
             System.out.println("Livro cadastrado com sucesso!");
-        } catch (LivroInvalidoException e){
+        } catch (LivroInvalidoException | IdDuplicadoException e){
             System.out.println(e.getMessage());
         }
 
