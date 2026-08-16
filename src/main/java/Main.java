@@ -5,6 +5,8 @@ import main.java.model.Livro;
 import main.java.service.BibliotecaService;
 import main.java.model.Emprestimo;
 import java.time.LocalDate;
+
+import main.java.exception.IdDuplicadoException;
 import main.java.exception.LivroIndisponivelException;
 import main.java.exception.UsuarioInvalidoException;
 import main.java.exception.LivroInvalidoException;
@@ -22,11 +24,30 @@ public class Main {
             5
         );
 
+        Usuario usuario2 = new Usuario(
+    1,
+    "Joao",
+    "joao@email.com"
+);
+
         BibliotecaService biblioteca = new BibliotecaService();
         try {
             biblioteca.cadastrarUsuario(usuario);
             System.out.println("Usuário Cadastrado com sucesso.");
-        } catch (UsuarioInvalidoException e) {
+        } catch (UsuarioInvalidoException | IdDuplicadoException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            biblioteca.cadastrarLivro(livro);
+            System.out.println("Livro cadastrado com sucesso!");
+        } catch (LivroInvalidoException e){
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            biblioteca.cadastrarUsuario(usuario2);
+            System.out.println("Usuário Cadastrado com sucesso.");
+        } catch (UsuarioInvalidoException | IdDuplicadoException e) {
             System.out.println(e.getMessage());
         }
         try {

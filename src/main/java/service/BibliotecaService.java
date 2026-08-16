@@ -7,6 +7,7 @@ import main.java.model.Emprestimo;
 import main.java.exception.LivroIndisponivelException;
 import main.java.exception.UsuarioInvalidoException;
 import main.java.exception.LivroInvalidoException;
+import main.java.exception.IdDuplicadoException;
 import main.java.model.StatusEmprestimo;
 import java.util.List;
 import java.util.Collections;
@@ -34,13 +35,19 @@ public class BibliotecaService {
         return Collections.unmodifiableList(emprestimos);
     }
 
-    public void cadastrarUsuario(Usuario usuario) throws UsuarioInvalidoException {
+    public void cadastrarUsuario(Usuario usuario) throws UsuarioInvalidoException, IdDuplicadoException {
         if(usuario.getNome() == null || usuario.getNome().isBlank()){
             throw new UsuarioInvalidoException("Nome do usuário é obrigatório.");
         }
 
         if(usuario.getEmail() == null || usuario.getEmail().isBlank()){
             throw new UsuarioInvalidoException("Email do usuário é obrigatório.");
+        }
+
+        for(Usuario usuarioExistente : usuarios){
+            if(usuarioExistente.getId() == usuario.getId()){
+                throw new IdDuplicadoException("Já existe um usuário com o ID " + usuario.getId());
+            }
         }
 
         usuarios.add(usuario);
