@@ -8,6 +8,7 @@ import main.java.exception.LivroIndisponivelException;
 import main.java.exception.UsuarioInvalidoException;
 import main.java.exception.LivroInvalidoException;
 import main.java.exception.IdDuplicadoException;
+import java.time.LocalDate;
 import main.java.model.StatusEmprestimo;
 import java.util.List;
 import java.util.Collections;
@@ -63,7 +64,7 @@ public class BibliotecaService {
             throw new LivroInvalidoException("Autor do Livro é obrigatório.");
         }
 
-        if(livro.getQtd() < 0) {
+        if(livro.getQtd() <= 0) {
             throw new LivroInvalidoException("A quantidade do livro não pode ser negativa.");
         }
 
@@ -84,6 +85,30 @@ public class BibliotecaService {
 
         emprestimos.add(emprestimo);
         emprestimo.getLivro().setQtd(emprestimo.getLivro().getQtd() - 1);
+    }
+
+    public Emprestimo realizarEmprestimo(int idUsuario, int idLivro) throws LivroIndisponivelException {
+        Usuario usuario = buscarUsuarioPorId(idUsuario);
+        Livro livro = buscarLivroPorId(idLivro);
+
+        if(usuario == null){
+            throw new IllegalArgumentException("Usuário não encontrado.");
+        }
+
+        if(livro == null){
+            throw new IllegalArgumentException("Livro não encontrado.");
+        }
+
+        if(livro.getQtd() == 0){
+            throw new LivroIndisponivelException("Livro indisponível.");
+        }
+
+        Emprestimo emprestimo = new Emprestimo(emprestimos.size() + 1, usuario, livro, LocalDate.now(),LocalDate.now().plusDays(7));
+        emprestimos.add(emprestimo);
+
+        livro.setQtd(livro.getQtd() - 1);
+
+        return emprestimo;
     }
 
     public void devolverLivro(Emprestimo emprestimo) {
