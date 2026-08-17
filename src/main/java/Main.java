@@ -109,6 +109,20 @@ System.out.println("Livros disponíveis após segunda devolução: "
         System.out.println("Usuários cadastrados: " + biblioteca.getUsuarios().size());
         System.out.println("Livros cadastrados: " + biblioteca.getLivros().size());
 
+        Usuario usuarioEncontrado = biblioteca.buscarUsuarioPorId(1);
 
+        if (usuarioEncontrado != null) {
+            System.out.println("Usuário encontrado: " + usuarioEncontrado.getNome());
+        } else {
+            System.out.println("Usuário não encontrado.");
+        }
+
+        Livro livroEncontrado = biblioteca.buscarLivroPorId(1);
+
+        if (livroEncontrado != null) {
+            System.out.println("Livro encontrado: " + livroEncontrado.getTitulo());
+        } else {
+            System.out.println("Livro não encontrado.");
+        }
     }
 }

@@ -106,4 +106,23 @@ public class BibliotecaService {
         }
         return false;
     }
+
+    public Usuario buscarUsuarioPorId(int id){
+        for(Usuario usuario : usuarios){
+            if(usuario.getId() == id) {
+                return usuario;
+            }
+        }
+        return null;
+    }
+
+    public Livro buscarLivroPorId(int id){
+        for(Livro livro : livros){
+            if(livro.getId() == id) {
+                return livro;
+            }
+        }
+
+        return null;
+    }
 }
