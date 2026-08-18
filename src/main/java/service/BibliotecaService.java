@@ -8,6 +8,7 @@ import main.java.exception.LivroIndisponivelException;
 import main.java.exception.UsuarioInvalidoException;
 import main.java.exception.LivroInvalidoException;
 import main.java.exception.IdDuplicadoException;
+import main.java.exception.EmprestimoInvalidoException;
 import java.time.LocalDate;
 import main.java.model.StatusEmprestimo;
 import java.util.List;
@@ -87,16 +88,16 @@ public class BibliotecaService {
         emprestimo.getLivro().setQtd(emprestimo.getLivro().getQtd() - 1);
     }
 
-    public Emprestimo realizarEmprestimo(int idUsuario, int idLivro) throws LivroIndisponivelException {
+    public Emprestimo realizarEmprestimo(int idUsuario, int idLivro) throws LivroIndisponivelException, EmprestimoInvalidoException {
         Usuario usuario = buscarUsuarioPorId(idUsuario);
         Livro livro = buscarLivroPorId(idLivro);
 
         if(usuario == null){
-            throw new IllegalArgumentException("Usuário não encontrado.");
+            throw new EmprestimoInvalidoException("Usuário não encontrado.");
         }
 
         if(livro == null){
-            throw new IllegalArgumentException("Livro não encontrado.");
+            throw new EmprestimoInvalidoException("Livro não encontrado.");
         }
 
         if(livro.getQtd() <= 0){

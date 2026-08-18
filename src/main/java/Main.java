@@ -8,6 +8,7 @@ import main.java.exception.IdDuplicadoException;
 import main.java.exception.LivroIndisponivelException;
 import main.java.exception.UsuarioInvalidoException;
 import main.java.exception.LivroInvalidoException;
+import main.java.exception.EmprestimoInvalidoException;
 
 public class Main {
 
@@ -54,7 +55,7 @@ public class Main {
             System.out.println("Livros disponíveis: "
                     + emprestimo.getLivro().getQtd());
 
-        } catch (LivroIndisponivelException | IllegalArgumentException e) {
+        } catch (LivroIndisponivelException | EmprestimoInvalidoException e) {
             System.out.println(e.getMessage());
         }
 
