@@ -9,6 +9,7 @@ import main.java.exception.UsuarioInvalidoException;
 import main.java.exception.LivroInvalidoException;
 import main.java.exception.IdDuplicadoException;
 import main.java.exception.EmprestimoInvalidoException;
+import main.java.exception.EmprestimoJaDevolvidoException;
 import java.time.LocalDate;
 import main.java.model.StatusEmprestimo;
 import java.util.List;
@@ -65,7 +66,7 @@ public class BibliotecaService {
             throw new LivroInvalidoException("Autor do Livro é obrigatório.");
         }
 
-        if(livro.getQtd() <= 0) {
+        if(livro.getQtd() < 0) {
             throw new LivroInvalidoException("A quantidade do livro não pode ser negativa.");
         }
 
@@ -112,11 +113,10 @@ public class BibliotecaService {
         return emprestimo;
     }
 
-    public void devolverLivro(Emprestimo emprestimo) {
+    public void devolverLivro(Emprestimo emprestimo) throws EmprestimoJaDevolvidoException {
 
         if (emprestimo.getStatus() == StatusEmprestimo.DEVOLVIDO) {
-            System.out.println("Este empréstimo já foi devolvido.");
-            return;
+            throw new EmprestimoJaDevolvidoException("Este empréstimo já foi devolvido.");
         }
 
         emprestimo.devolver();

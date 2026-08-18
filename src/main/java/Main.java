@@ -9,6 +9,7 @@ import main.java.exception.LivroIndisponivelException;
 import main.java.exception.UsuarioInvalidoException;
 import main.java.exception.LivroInvalidoException;
 import main.java.exception.EmprestimoInvalidoException;
+import main.java.exception.EmprestimoJaDevolvidoException;
 
 public class Main {
 
@@ -46,8 +47,10 @@ public class Main {
             System.out.println(e.getMessage());
         }
 
+        Emprestimo emprestimo = null;
+
         try {
-            Emprestimo emprestimo = biblioteca.realizarEmprestimo(1, 1);
+            emprestimo = biblioteca.realizarEmprestimo(1, 1);
 
             System.out.println("Empréstimo realizado com sucesso!");
             System.out.println("Usuário: " + emprestimo.getUsuario().getNome());
@@ -58,6 +61,18 @@ public class Main {
         } catch (LivroIndisponivelException | EmprestimoInvalidoException e) {
             System.out.println(e.getMessage());
         }
+
+        if (emprestimo != null) {
+        try {
+            biblioteca.devolverLivro(emprestimo);
+
+            System.out.println("Livro devolvido com sucesso!");
+            System.out.println("Livros disponíveis: "+ emprestimo.getLivro().getQtd());
+
+        } catch (EmprestimoJaDevolvidoException e) {
+            System.out.println(e.getMessage());
+        }
+        }   
 
         System.out.println("Usuários cadastrados: "
                 + biblioteca.getUsuarios().size());
