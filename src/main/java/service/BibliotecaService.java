@@ -99,7 +99,7 @@ public class BibliotecaService {
             throw new IllegalArgumentException("Livro não encontrado.");
         }
 
-        if(livro.getQtd() == 0){
+        if(livro.getQtd() <= 0){
             throw new LivroIndisponivelException("Livro indisponível.");
         }
 

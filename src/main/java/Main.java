@@ -2,20 +2,27 @@ package main.java;
 
 import main.java.model.Usuario;
 import main.java.model.Livro;
-import main.java.service.BibliotecaService;
 import main.java.model.Emprestimo;
-import java.time.LocalDate;
-
+import main.java.service.BibliotecaService;
 import main.java.exception.IdDuplicadoException;
 import main.java.exception.LivroIndisponivelException;
 import main.java.exception.UsuarioInvalidoException;
 import main.java.exception.LivroInvalidoException;
 
 public class Main {
+
     public static void main(String[] args) {
+
         System.out.println("Sistema de Biblioteca");
 
-        Usuario usuario = new Usuario(1, "Flávio", "flavio@email.com");
+        BibliotecaService biblioteca = new BibliotecaService();
+
+        Usuario usuario = new Usuario(
+            1,
+            "Flávio",
+            "flavio@email.com"
+        );
+
         Livro livro = new Livro(
             1,
             "Clean Code",
@@ -24,105 +31,40 @@ public class Main {
             5
         );
 
-        Usuario usuario2 = new Usuario(
-    1,
-    "Joao",
-    "joao@email.com"
-);
-
-Livro livro1 = new Livro(
-    1,
-    "Clean Code",
-    "Robert C. Martin",
-    2008,
-    5
-);
-
-Livro livro2 = new Livro(
-    1,
-    "Java Efetivo",
-    "Joshua Bloch",
-    2018,
-    3
-);
-
-        BibliotecaService biblioteca = new BibliotecaService();
         try {
             biblioteca.cadastrarUsuario(usuario);
-            System.out.println("Usuário Cadastrado com sucesso.");
+            System.out.println("Usuário cadastrado com sucesso!");
         } catch (UsuarioInvalidoException | IdDuplicadoException e) {
             System.out.println(e.getMessage());
         }
+
         try {
-            biblioteca.cadastrarLivro(livro1);
+            biblioteca.cadastrarLivro(livro);
             System.out.println("Livro cadastrado com sucesso!");
-        } catch (LivroInvalidoException | IdDuplicadoException e){
+        } catch (LivroInvalidoException | IdDuplicadoException e) {
             System.out.println(e.getMessage());
         }
 
         try {
-            biblioteca.cadastrarUsuario(usuario2);
-            System.out.println("Usuário Cadastrado com sucesso.");
-        } catch (UsuarioInvalidoException | IdDuplicadoException e) {
-            System.out.println(e.getMessage());
-        }
-        try {
-            biblioteca.cadastrarLivro(livro2);
-            System.out.println("Livro cadastrado com sucesso!");
-        } catch (LivroInvalidoException | IdDuplicadoException e){
-            System.out.println(e.getMessage());
-        }
-
-
-        Emprestimo emprestimo = new Emprestimo(
-            1,
-            usuario,
-            livro,
-            LocalDate.now(),
-            LocalDate.now().plusDays(7)
-        );
-        try {
-            biblioteca.realizarEmprestimo(emprestimo);
+            Emprestimo emprestimo = biblioteca.realizarEmprestimo(1, 1);
 
             System.out.println("Empréstimo realizado com sucesso!");
-            System.out.println("Livros disponiveis: " + livro.getQtd());
-        } catch (LivroIndisponivelException e){
+            System.out.println("Usuário: " + emprestimo.getUsuario().getNome());
+            System.out.println("Livro: " + emprestimo.getLivro().getTitulo());
+            System.out.println("Livros disponíveis: "
+                    + emprestimo.getLivro().getQtd());
+
+        } catch (LivroIndisponivelException | IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
 
-        biblioteca.devolverLivro(emprestimo);
+        System.out.println("Usuários cadastrados: "
+                + biblioteca.getUsuarios().size());
 
-System.out.println("Status do empréstimo: "
-        + emprestimo.getStatus());
+        System.out.println("Livros cadastrados: "
+                + biblioteca.getLivros().size());
 
-System.out.println("Livros disponíveis após devolução: "
-        + livro.getQtd());
-
-        biblioteca.devolverLivro(emprestimo);
-
-System.out.println("Livros disponíveis após segunda devolução: "
-        + livro.getQtd());
-
-        System.out.println("Empréstimos realizados: " + biblioteca.getEmprestimos().size());
-
-        System.out.println("Livros disponíveis: " + livro.getQtd());
-        System.out.println("Usuários cadastrados: " + biblioteca.getUsuarios().size());
-        System.out.println("Livros cadastrados: " + biblioteca.getLivros().size());
-
-        Usuario usuarioEncontrado = biblioteca.buscarUsuarioPorId(1);
-
-        if (usuarioEncontrado != null) {
-            System.out.println("Usuário encontrado: " + usuarioEncontrado.getNome());
-        } else {
-            System.out.println("Usuário não encontrado.");
-        }
-
-        Livro livroEncontrado = biblioteca.buscarLivroPorId(1);
-
-        if (livroEncontrado != null) {
-            System.out.println("Livro encontrado: " + livroEncontrado.getTitulo());
-        } else {
-            System.out.println("Livro não encontrado.");
-        }
+        System.out.println("Empréstimos realizados: "
+                + biblioteca.getEmprestimos().size());
     }
 }
