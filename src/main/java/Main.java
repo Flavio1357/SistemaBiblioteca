@@ -1,86 +1,112 @@
 package main.java;
 
+import java.util.List;
+
+import main.java.DAO.UsuarioDAO;
 import main.java.model.Usuario;
-import main.java.model.Livro;
-import main.java.model.Emprestimo;
-import main.java.service.BibliotecaService;
-import main.java.exception.IdDuplicadoException;
-import main.java.exception.LivroIndisponivelException;
-import main.java.exception.UsuarioInvalidoException;
-import main.java.exception.LivroInvalidoException;
-import main.java.exception.EmprestimoInvalidoException;
-import main.java.exception.EmprestimoJaDevolvidoException;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("Sistema de Biblioteca");
-
-        BibliotecaService biblioteca = new BibliotecaService();
-
-        Usuario usuario = new Usuario(
-            1,
-            "Flávio",
-            "flavio@email.com"
-        );
-
-        Livro livro = new Livro(
-            1,
-            "Clean Code",
-            "Robert C. Martin",
-            2008,
-            5
-        );
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
 
         try {
-            biblioteca.cadastrarUsuario(usuario);
+
+            // =====================================
+            // 1. CADASTRAR
+            // =====================================
+
+            Usuario usuario = new Usuario(
+                0,
+                "Carlos",
+                "carlos@email.com"
+            );
+
+            usuarioDAO.cadastrar(usuario);
+
             System.out.println("Usuário cadastrado com sucesso!");
-        } catch (UsuarioInvalidoException | IdDuplicadoException e) {
-            System.out.println(e.getMessage());
+            System.out.println("ID gerado: " + usuario.getId());
+
+
+            // =====================================
+            // 2. LISTAR
+            // =====================================
+
+            List<Usuario> usuarios = usuarioDAO.listarTodos();
+
+            System.out.println("\nUsuários cadastrados:");
+
+            for (Usuario u : usuarios) {
+                System.out.println(
+                    u.getId() + " - " +
+                    u.getNome() + " - " +
+                    u.getEmail()
+                );
+            }
+
+
+            // =====================================
+            // 3. ATUALIZAR
+            // =====================================
+
+            Usuario usuarioAtualizado = new Usuario(
+                usuario.getId(),
+                "Carlos Atualizado",
+                "carlos.atualizado@email.com"
+            );
+
+            usuarioDAO.atualizar(usuarioAtualizado);
+
+            System.out.println("\nUsuário atualizado com sucesso!");
+
+
+            // =====================================
+            // 4. LISTAR APÓS ATUALIZAÇÃO
+            // =====================================
+
+            usuarios = usuarioDAO.listarTodos();
+
+            System.out.println("\nUsuários após atualização:");
+
+            for (Usuario u : usuarios) {
+                System.out.println(
+                    u.getId() + " - " +
+                    u.getNome() + " - " +
+                    u.getEmail()
+                );
+            }
+
+
+            // =====================================
+            // 5. DELETAR
+            // =====================================
+
+            usuarioDAO.deletar(usuario.getId());
+
+            System.out.println("\nUsuário deletado com sucesso!");
+
+
+            // =====================================
+            // 6. LISTAR APÓS EXCLUSÃO
+            // =====================================
+
+            usuarios = usuarioDAO.listarTodos();
+
+            System.out.println("\nUsuários após exclusão:");
+
+            for (Usuario u : usuarios) {
+                System.out.println(
+                    u.getId() + " - " +
+                    u.getNome() + " - " +
+                    u.getEmail()
+                );
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("\nErro durante o teste:");
+            e.printStackTrace();
         }
-
-        try {
-            biblioteca.cadastrarLivro(livro);
-            System.out.println("Livro cadastrado com sucesso!");
-        } catch (LivroInvalidoException | IdDuplicadoException e) {
-            System.out.println(e.getMessage());
-        }
-
-        Emprestimo emprestimo = null;
-
-        try {
-            emprestimo = biblioteca.realizarEmprestimo(1, 1);
-
-            System.out.println("Empréstimo realizado com sucesso!");
-            System.out.println("Usuário: " + emprestimo.getUsuario().getNome());
-            System.out.println("Livro: " + emprestimo.getLivro().getTitulo());
-            System.out.println("Livros disponíveis: "
-                    + emprestimo.getLivro().getQtd());
-
-        } catch (LivroIndisponivelException | EmprestimoInvalidoException e) {
-            System.out.println(e.getMessage());
-        }
-
-        if (emprestimo != null) {
-        try {
-            biblioteca.devolverLivro(emprestimo);
-
-            System.out.println("Livro devolvido com sucesso!");
-            System.out.println("Livros disponíveis: "+ emprestimo.getLivro().getQtd());
-
-        } catch (EmprestimoJaDevolvidoException e) {
-            System.out.println(e.getMessage());
-        }
-        }   
-
-        System.out.println("Usuários cadastrados: "
-                + biblioteca.getUsuarios().size());
-
-        System.out.println("Livros cadastrados: "
-                + biblioteca.getLivros().size());
-
-        System.out.println("Empréstimos realizados: "
-                + biblioteca.getEmprestimos().size());
     }
 }

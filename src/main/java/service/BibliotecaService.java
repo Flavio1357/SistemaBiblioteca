@@ -14,16 +14,20 @@ import java.time.LocalDate;
 import main.java.model.StatusEmprestimo;
 import java.util.List;
 import java.util.Collections;
+import main.java.DAO.UsuarioDAO;
+import java.sql.SQLException;
 
 public class BibliotecaService {
     private ArrayList<Usuario> usuarios;
     private ArrayList<Livro> livros;
     private ArrayList<Emprestimo> emprestimos;
+    private UsuarioDAO usuarioDAO;
 
     public BibliotecaService(){
         usuarios = new ArrayList<>();
         livros = new ArrayList<>();
         emprestimos = new ArrayList<>();
+        usuarioDAO = new UsuarioDAO();
     }
 
     public List<Usuario> getUsuarios() {
@@ -53,7 +57,12 @@ public class BibliotecaService {
             }
         }
 
-        usuarios.add(usuario);
+        try {
+            usuarioDAO.cadastrar(usuario);
+            usuarios.add(usuario);
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao cadastrar usuário no banco de dados.", e);
+        }       
         
     }
 
