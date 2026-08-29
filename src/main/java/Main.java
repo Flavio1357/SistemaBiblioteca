@@ -2,111 +2,47 @@ package main.java;
 
 import java.util.List;
 
-import main.java.DAO.UsuarioDAO;
 import main.java.model.Usuario;
+import main.java.service.BibliotecaService;
 
 public class Main {
+public static void main(String[] args) {
 
-    public static void main(String[] args) {
+    try {
 
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        // Cria o Service e carrega os usuários do banco
+        BibliotecaService biblioteca = new BibliotecaService();
 
-        try {
+        // Cria um novo usuário
+        Usuario usuario = new Usuario(
+            0,
+            "Pedro",
+            "pedro@email.com"
+        );
 
-            // =====================================
-            // 1. CADASTRAR
-            // =====================================
+        // Cadastra através do Service
+        biblioteca.cadastrarUsuario(usuario);
 
-            Usuario usuario = new Usuario(
-                0,
-                "Carlos",
-                "carlos@email.com"
+        System.out.println("Usuário cadastrado pelo Service!");
+        System.out.println("ID gerado: " + usuario.getId());
+
+        // Lista os usuários
+        List<Usuario> usuarios = biblioteca.getUsuarios();
+
+        System.out.println("\nUsuários:");
+
+        for (Usuario u : usuarios) {
+            System.out.println(
+                u.getId() + " - " +
+                u.getNome() + " - " +
+                u.getEmail()
             );
+        }
 
-            usuarioDAO.cadastrar(usuario);
+    } catch (Exception e) {
 
-            System.out.println("Usuário cadastrado com sucesso!");
-            System.out.println("ID gerado: " + usuario.getId());
-
-
-            // =====================================
-            // 2. LISTAR
-            // =====================================
-
-            List<Usuario> usuarios = usuarioDAO.listarTodos();
-
-            System.out.println("\nUsuários cadastrados:");
-
-            for (Usuario u : usuarios) {
-                System.out.println(
-                    u.getId() + " - " +
-                    u.getNome() + " - " +
-                    u.getEmail()
-                );
-            }
-
-
-            // =====================================
-            // 3. ATUALIZAR
-            // =====================================
-
-            Usuario usuarioAtualizado = new Usuario(
-                usuario.getId(),
-                "Carlos Atualizado",
-                "carlos.atualizado@email.com"
-            );
-
-            usuarioDAO.atualizar(usuarioAtualizado);
-
-            System.out.println("\nUsuário atualizado com sucesso!");
-
-
-            // =====================================
-            // 4. LISTAR APÓS ATUALIZAÇÃO
-            // =====================================
-
-            usuarios = usuarioDAO.listarTodos();
-
-            System.out.println("\nUsuários após atualização:");
-
-            for (Usuario u : usuarios) {
-                System.out.println(
-                    u.getId() + " - " +
-                    u.getNome() + " - " +
-                    u.getEmail()
-                );
-            }
-
-
-            // =====================================
-            // 5. DELETAR
-            // =====================================
-
-            usuarioDAO.deletar(usuario.getId());
-
-            System.out.println("\nUsuário deletado com sucesso!");
-
-
-            // =====================================
-            // 6. LISTAR APÓS EXCLUSÃO
-            // =====================================
-
-            usuarios = usuarioDAO.listarTodos();
-
-            System.out.println("\nUsuários após exclusão:");
-
-            for (Usuario u : usuarios) {
-                System.out.println(
-                    u.getId() + " - " +
-                    u.getNome() + " - " +
-                    u.getEmail()
-                );
-            }
-
-        } catch (Exception e) {
-
-            System.out.println("\nErro durante o teste:");
-            e.printStackTrace();
+        System.out.println("Erro:");
+        e.printStackTrace();
         }
     }
 }

@@ -28,6 +28,12 @@ public class BibliotecaService {
         livros = new ArrayList<>();
         emprestimos = new ArrayList<>();
         usuarioDAO = new UsuarioDAO();
+
+        try {
+            usuarios.addAll(usuarioDAO.listarTodos());
+        } catch (SQLException e){
+            throw new RuntimeException("Erro ao carregar usuários do banco de dados", e);
+        }
     }
 
     public List<Usuario> getUsuarios() {
