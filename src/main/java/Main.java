@@ -13,23 +13,40 @@ public static void main(String[] args) {
         // Cria o Service e carrega os usuários do banco
         BibliotecaService biblioteca = new BibliotecaService();
 
-        // Cria um novo usuário
-        Usuario usuario = new Usuario(
-            0,
-            "Pedro",
-            "pedro@email.com"
-        );
+        System.out.println("Usuários carregados do banco:");
 
-        // Cadastra através do Service
-        biblioteca.cadastrarUsuario(usuario);
-
-        System.out.println("Usuário cadastrado pelo Service!");
-        System.out.println("ID gerado: " + usuario.getId());
-
-        // Lista os usuários
         List<Usuario> usuarios = biblioteca.getUsuarios();
 
-        System.out.println("\nUsuários:");
+        for (Usuario u : usuarios) {
+            System.out.println(
+                u.getId() + " - " +
+                u.getNome() + " - " +
+                u.getEmail()
+            );
+        }
+
+        // =====================================
+        // TESTE DE CADASTRO PELO SERVICE
+        // =====================================
+
+        Usuario novoUsuario = new Usuario(
+            0,
+            "Teste Git Pull",
+            "testegitpull@email.com"
+        );
+
+        biblioteca.cadastrarUsuario(novoUsuario);
+
+        System.out.println("\nUsuário cadastrado pelo Service!");
+        System.out.println("ID gerado: " + novoUsuario.getId());
+
+        // =====================================
+        // LISTAR APÓS CADASTRO
+        // =====================================
+
+        usuarios = biblioteca.getUsuarios();
+
+        System.out.println("\nUsuários após cadastro:");
 
         for (Usuario u : usuarios) {
             System.out.println(
@@ -41,8 +58,9 @@ public static void main(String[] args) {
 
     } catch (Exception e) {
 
-        System.out.println("Erro:");
+        System.out.println("\nErro durante o teste:");
         e.printStackTrace();
         }
     }
+
 }
