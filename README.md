@@ -37,10 +37,12 @@ SistemaBiblioteca/
             ├── connection/
             │   └── ConnectionFactory.java
             ├── DAO/
-            │   └── UsuarioDAO.java
+            │   ├── UsuarioDAO.java
+            │   └── LivroDAO.java
             ├── exception/
             ├── model/
             ├── service/
+            │   └── BibliotecaService.java
             └── Main.java
 ```
 
@@ -52,7 +54,7 @@ O sistema utiliza **PostgreSQL** com o banco:
 Biblioteca
 ```
 
-A tabela de usuários possui:
+### Tabela `usuarios`
 
 ```text
 usuarios
@@ -63,6 +65,19 @@ usuarios
 
 O ID dos usuários é gerado automaticamente pelo PostgreSQL.
 
+### Tabela `livros`
+
+```text
+livros
+├── id
+├── titulo
+├── autor
+├── ano_publicacao
+└── qtd
+```
+
+O ID dos livros também é gerado automaticamente pelo PostgreSQL.
+
 ## 🔌 JDBC
 
 A conexão com o banco é realizada através da classe:
@@ -71,11 +86,7 @@ A conexão com o banco é realizada através da classe:
 ConnectionFactory
 ```
 
-A senha do banco **não é armazenada diretamente no código-fonte**. O projeto utiliza a variável de ambiente:
-
-```text
-DB_PASSWORD
-```
+A aplicação utiliza JDBC para realizar a comunicação entre o Java e o PostgreSQL.
 
 ## 👤 UsuarioDAO
 
@@ -97,28 +108,60 @@ UPDATE ✅
 DELETE ✅
 ```
 
+O `UsuarioDAO` também recupera o ID gerado automaticamente pelo banco de dados.
+
+## 📚 LivroDAO
+
+O `LivroDAO` é responsável pelo acesso aos dados dos livros.
+
+Atualmente possui:
+
+* `cadastrar()` → `INSERT`
+* `listarTodos()` → `SELECT`
+* `atualizar()` → `UPDATE`
+* `deletar()` → `DELETE`
+
+### CRUD implementado
+
+```text
+CREATE ✅
+READ   ✅
+UPDATE ✅
+DELETE ✅
+```
+
+O cadastro, atualização e exclusão de livros já estão integrados ao `BibliotecaService`.
+
 ## 📌 Funcionalidades do sistema
 
 ### Usuários
 
-* Cadastro de usuários
-* Listagem de usuários
-* Atualização de usuários
-* Exclusão de usuários
+* Cadastro de usuários ✅
+* Listagem de usuários ✅
+* Atualização de usuários ✅
+* Exclusão de usuários ✅
+* Integração com PostgreSQL através do `UsuarioDAO` ✅
+* Integração do `UsuarioDAO` ao `BibliotecaService` ✅
 
 ### Livros
 
-* Cadastro de livros
-* Controle de quantidade disponível
+* Cadastro de livros ✅
+* Listagem de livros ✅
+* Atualização de livros ✅
+* Exclusão de livros ✅
+* Controle de quantidade disponível ✅
+* Integração com PostgreSQL através do `LivroDAO` ✅
+* Integração do `LivroDAO` ao `BibliotecaService` ✅
 
 ### Empréstimos
 
-* Realização de empréstimos
-* Devolução de livros
-* Controle de disponibilidade
-* Validação de empréstimos
+* Realização de empréstimos ✅
+* Devolução de livros ✅
+* Controle de disponibilidade ✅
+* Validação de empréstimos ✅
+* Persistência no banco de dados ⏳
 
-> A persistência das demais entidades ainda está sendo implementada.
+> A lógica de empréstimos já existe no `BibliotecaService`, porém sua persistência no PostgreSQL ainda será implementada.
 
 ## 🧠 Conceitos aplicados
 
@@ -134,27 +177,40 @@ O projeto utiliza conceitos como:
 * DAO
 * JDBC
 * SQL
+* PostgreSQL
 * Persistência em banco de dados
+* CRUD
+* Geração automática de IDs
+* `PreparedStatement`
+* `ResultSet`
 
 ## 🚀 Próximos passos
 
-* [x] Configurar PostgreSQL
-* [x] Configurar JDBC
-* [x] Criar `ConnectionFactory`
-* [x] Criar `UsuarioDAO`
-* [x] Implementar `INSERT`
-* [x] Implementar `SELECT`
-* [x] Implementar `UPDATE`
-* [x] Implementar `DELETE`
-* [ ] Integrar `UsuarioDAO` ao `BibliotecaService`
-* [ ] Criar `LivroDAO`
-* [ ] Criar `EmprestimoDAO`
-* [ ] Persistir empréstimos e devoluções no banco
-* [ ] Finalizar integração entre Service e DAOs
-* [ ] Melhorar a aplicação principal
+* ~~Configurar PostgreSQL~~ ✅
+* ~~Configurar JDBC~~ ✅
+* ~~Criar `ConnectionFactory`~~ ✅
+* ~~Criar `UsuarioDAO`~~ ✅
+* ~~Implementar `INSERT` de usuários~~ ✅
+* ~~Implementar `SELECT` de usuários~~ ✅
+* ~~Implementar `UPDATE` de usuários~~ ✅
+* ~~Implementar `DELETE` de usuários~~ ✅
+* ~~Integrar `UsuarioDAO` ao `BibliotecaService`~~ ✅
+* ~~Criar `LivroDAO`~~ ✅
+* ~~Implementar CRUD de livros~~ ✅
+* ~~Integrar `LivroDAO` ao `BibliotecaService`~~ ✅
+* Criar `EmprestimoDAO`
+* Persistir empréstimos no banco
+* Persistir devoluções no banco
+* Finalizar integração entre Service e DAOs
+* Melhorar a aplicação principal
+* Criar uma interface para o sistema
 
 ## 👨‍💻 Status
 
 **Em desenvolvimento.**
 
-Este projeto está sendo desenvolvido como projeto de estudo para praticar **Java, JDBC, SQL, PostgreSQL e desenvolvimento de aplicações orientadas a objetos**.
+O projeto está sendo desenvolvido como projeto de estudo para praticar **Java, JDBC, SQL, PostgreSQL e desenvolvimento de aplicações orientadas a objetos**.
+
+Atualmente, as entidades **Usuário** e **Livro** possuem CRUD completo com persistência no PostgreSQL e integração com o `BibliotecaService`.
+
+O próximo grande passo é implementar a persistência dos **Empréstimos** no banco de dados.
