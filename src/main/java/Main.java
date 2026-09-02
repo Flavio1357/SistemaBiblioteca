@@ -1,66 +1,97 @@
 package main.java;
 
-import java.util.List;
-
-import main.java.model.Usuario;
+import main.java.model.Livro;
 import main.java.service.BibliotecaService;
 
 public class Main {
-public static void main(String[] args) {
 
-    try {
+    public static void main(String[] args) {
 
-        // Cria o Service e carrega os usuários do banco
-        BibliotecaService biblioteca = new BibliotecaService();
+        try {
 
-        System.out.println("Usuários carregados do banco:");
+            BibliotecaService biblioteca = new BibliotecaService();
 
-        List<Usuario> usuarios = biblioteca.getUsuarios();
+            // =========================
+            // 1. LISTAR LIVROS
+            // =========================
 
-        for (Usuario u : usuarios) {
-            System.out.println(
-                u.getId() + " - " +
-                u.getNome() + " - " +
-                u.getEmail()
-            );
-        }
+            System.out.println("=== LIVROS ANTES DA ATUALIZAÇÃO ===");
 
-        // =====================================
-        // TESTE DE CADASTRO PELO SERVICE
-        // =====================================
+            for (Livro livro : biblioteca.getLivros()) {
+                System.out.println(
+                    livro.getId() + " - " +
+                    livro.getTitulo() + " - " +
+                    livro.getAutor() + " - " +
+                    livro.getAnoPublicacao() + " - " +
+                    livro.getQtd() + " disponíveis"
+                );
+            }
 
-        Usuario novoUsuario = new Usuario(
-            0,
-            "Teste Git Pull",
-            "testegitpull@email.com"
-        );
+            // =========================
+            // 2. ATUALIZAR LIVRO
+            // =========================
 
-        biblioteca.cadastrarUsuario(novoUsuario);
+            Livro livro = biblioteca.buscarLivroPorId(4);
 
-        System.out.println("\nUsuário cadastrado pelo Service!");
-        System.out.println("ID gerado: " + novoUsuario.getId());
+            if (livro != null) {
 
-        // =====================================
-        // LISTAR APÓS CADASTRO
-        // =====================================
+                livro.setTitulo("Java Efetivo - 3ª Edição");
+                livro.setAutor("Joshua Bloch");
+                livro.setAnoPublicacao(2018);
+                livro.setQtd(10);
 
-        usuarios = biblioteca.getUsuarios();
+                biblioteca.atualizarLivro(livro);
 
-        System.out.println("\nUsuários após cadastro:");
+                System.out.println("\nLivro atualizado com sucesso!");
 
-        for (Usuario u : usuarios) {
-            System.out.println(
-                u.getId() + " - " +
-                u.getNome() + " - " +
-                u.getEmail()
-            );
-        }
+            } else {
+                System.out.println("\nLivro com ID 4 não encontrado.");
+            }
 
-    } catch (Exception e) {
+            // =========================
+            // 3. MOSTRAR APÓS ATUALIZAR
+            // =========================
 
-        System.out.println("\nErro durante o teste:");
-        e.printStackTrace();
+            System.out.println("\n=== LIVROS APÓS A ATUALIZAÇÃO ===");
+
+            for (Livro l : biblioteca.getLivros()) {
+                System.out.println(
+                    l.getId() + " - " +
+                    l.getTitulo() + " - " +
+                    l.getAutor() + " - " +
+                    l.getAnoPublicacao() + " - " +
+                    l.getQtd() + " disponíveis"
+                );
+            }
+
+            // =========================
+            // 4. DELETAR LIVRO
+            // =========================
+
+            biblioteca.deletarLivro(4);
+
+            System.out.println("\nLivro deletado com sucesso!");
+
+            // =========================
+            // 5. MOSTRAR APÓS DELETAR
+            // =========================
+
+            System.out.println("\n=== LIVROS APÓS A EXCLUSÃO ===");
+
+            for (Livro l : biblioteca.getLivros()) {
+                System.out.println(
+                    l.getId() + " - " +
+                    l.getTitulo() + " - " +
+                    l.getAutor() + " - " +
+                    l.getAnoPublicacao() + " - " +
+                    l.getQtd() + " disponíveis"
+                );
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("\nErro:");
+            e.printStackTrace();
         }
     }
-
 }

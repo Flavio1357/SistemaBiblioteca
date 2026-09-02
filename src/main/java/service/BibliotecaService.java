@@ -15,6 +15,7 @@ import main.java.model.StatusEmprestimo;
 import java.util.List;
 import java.util.Collections;
 import main.java.DAO.UsuarioDAO;
+import main.java.DAO.LivroDAO;
 import java.sql.SQLException;
 
 public class BibliotecaService {
@@ -22,18 +23,26 @@ public class BibliotecaService {
     private ArrayList<Livro> livros;
     private ArrayList<Emprestimo> emprestimos;
     private UsuarioDAO usuarioDAO;
+    private LivroDAO livroDAO;
 
     public BibliotecaService(){
         usuarios = new ArrayList<>();
         livros = new ArrayList<>();
         emprestimos = new ArrayList<>();
         usuarioDAO = new UsuarioDAO();
+        livroDAO = new LivroDAO();
 
         try {
             usuarios.addAll(usuarioDAO.listarTodos());
-        } catch (SQLException e){
-            throw new RuntimeException("Erro ao carregar usuários do banco de dados", e);
-        }
+            } catch (SQLException e){
+                throw new RuntimeException("Erro ao carregar usuários do banco de dados", e);
+            }
+
+        try {
+            livros.addAll(livroDAO.listarTodos());
+            } catch (SQLException e) {
+                throw new RuntimeException("Erro ao carregar livros do banco de dados", e);
+            }
     }
 
     public List<Usuario> getUsuarios() {
@@ -92,7 +101,12 @@ public class BibliotecaService {
         }
 
 
-        livros.add(livro);
+        try {
+            livroDAO.cadastrar(livro);
+            livros.add(livro);
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao cadastrar livro no banco de dados", e);
+        }
     }
 
     public void realizarEmprestimo(Emprestimo emprestimo) throws LivroIndisponivelException {
@@ -165,5 +179,60 @@ public class BibliotecaService {
         }
 
         return null;
+    }
+
+    public void atualizarLivro(Livro livro)
+        throws LivroInvalidoException {
+
+    if (livro.getTitulo() == null || livro.getTitulo().isBlank()) {
+        throw new LivroInvalidoException("Título do livro é obrigatório.");
+    }
+
+    if (livro.getAutor() == null || livro.getAutor().isBlank()) {
+        throw new LivroInvalidoException("Autor do livro é obrigatório.");
+    }
+
+    if (livro.getQtd() < 0) {
+        throw new LivroInvalidoException(
+            "A quantidade do livro não pode ser negativa."
+        );
+    }
+
+    Livro livroExistente = buscarLivroPorId(livro.getId());
+
+    if (livroExistente == null) {
+        throw new IllegalArgumentException(
+            "Livro não encontrado."
+        );
+    }
+
+    try {
+        livroDAO.atualizar(livro);
+
+        livroExistente.setTitulo(livro.getTitulo());
+        livroExistente.setAutor(livro.getAutor());
+        livroExistente.setAnoPublicacao(livro.getAnoPublicacao());
+        livroExistente.setQtd(livro.getQtd());
+
+    } catch (SQLException e) {
+        throw new RuntimeException("Erro ao atualizar livro no banco de dados.", e);
+        }
+    }
+
+    public void deletarLivro(int id) {
+
+    Livro livro = buscarLivroPorId(id);
+
+    if (livro == null) {
+        throw new IllegalArgumentException("Livro não encontrado.");
+    }
+
+    try {
+        livroDAO.deletar(id);
+        livros.remove(livro);
+
+    } catch (SQLException e) {
+        throw new RuntimeException("Erro ao deletar livro do banco de dados.", e);
+        }
     }
 }
