@@ -1,22 +1,23 @@
 package main.java.service;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import main.java.model.Usuario;
-import main.java.model.Livro;
-import main.java.model.Emprestimo;
-import main.java.exception.LivroIndisponivelException;
-import main.java.exception.UsuarioInvalidoException;
-import main.java.exception.LivroInvalidoException;
-import main.java.exception.IdDuplicadoException;
+import java.util.Collections;
+import java.util.List;
+import main.java.DAO.EmprestimoDAO;
+import main.java.DAO.LivroDAO;
+import main.java.DAO.UsuarioDAO;
 import main.java.exception.EmprestimoInvalidoException;
 import main.java.exception.EmprestimoJaDevolvidoException;
-import java.time.LocalDate;
+import main.java.exception.IdDuplicadoException;
+import main.java.exception.LivroIndisponivelException;
+import main.java.exception.LivroInvalidoException;
+import main.java.exception.UsuarioInvalidoException;
+import main.java.model.Emprestimo;
+import main.java.model.Livro;
 import main.java.model.StatusEmprestimo;
-import java.util.List;
-import java.util.Collections;
-import main.java.DAO.UsuarioDAO;
-import main.java.DAO.LivroDAO;
-import java.sql.SQLException;
+import main.java.model.Usuario;
 
 public class BibliotecaService {
     private ArrayList<Usuario> usuarios;
@@ -24,6 +25,7 @@ public class BibliotecaService {
     private ArrayList<Emprestimo> emprestimos;
     private UsuarioDAO usuarioDAO;
     private LivroDAO livroDAO;
+    private EmprestimoDAO emprestimoDAO;
 
     public BibliotecaService(){
         usuarios = new ArrayList<>();
@@ -31,6 +33,7 @@ public class BibliotecaService {
         emprestimos = new ArrayList<>();
         usuarioDAO = new UsuarioDAO();
         livroDAO = new LivroDAO();
+        emprestimoDAO = new EmprestimoDAO();
 
         try {
             usuarios.addAll(usuarioDAO.listarTodos());
@@ -42,6 +45,12 @@ public class BibliotecaService {
             livros.addAll(livroDAO.listarTodos());
             } catch (SQLException e) {
                 throw new RuntimeException("Erro ao carregar livros do banco de dados", e);
+            }
+
+        try {
+            emprestimos.addAll(emprestimoDAO.listarTodos());
+            } catch (SQLException e) {
+                throw  new RuntimeException("Erro ao carregar empréstimos do banco de dados", e);
             }
     }
 
@@ -116,6 +125,17 @@ public class BibliotecaService {
 
         emprestimos.add(emprestimo);
         emprestimo.getLivro().setQtd(emprestimo.getLivro().getQtd() - 1);
+        try {
+            livroDAO.atualizar(emprestimo.getLivro());
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar quantidade do livro no banco de dados", e);
+        }
+
+        try {
+            emprestimoDAO.cadastrar(emprestimo);
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao salvar empréstimo no banco de dados", e);
+        }
     }
 
     public Emprestimo realizarEmprestimo(int idUsuario, int idLivro) throws LivroIndisponivelException, EmprestimoInvalidoException {
@@ -134,10 +154,22 @@ public class BibliotecaService {
             throw new LivroIndisponivelException("Livro indisponível.");
         }
 
-        Emprestimo emprestimo = new Emprestimo(emprestimos.size() + 1, usuario, livro, LocalDate.now(),LocalDate.now().plusDays(7));
+        Emprestimo emprestimo = new Emprestimo(0, usuario, livro, LocalDate.now(),LocalDate.now().plusDays(7));
         emprestimos.add(emprestimo);
 
         livro.setQtd(livro.getQtd() - 1);
+
+        try {
+            livroDAO.atualizar(livro);
+        } catch (SQLException e) {
+            throw  new RuntimeException("Erro ao atualizar quantidade do livro no banco de dados", e);
+        }
+
+        try {
+            emprestimoDAO.cadastrar(emprestimo);
+        } catch (SQLException e) {
+            throw  new RuntimeException("Erro ao salvar empréstimo no banco de dados", e);
+        }
 
         return emprestimo;
     }
@@ -149,8 +181,21 @@ public class BibliotecaService {
         }
 
         emprestimo.devolver();
-
+        emprestimo.setDataDevolucao(LocalDate.now());
         emprestimo.getLivro().setQtd(emprestimo.getLivro().getQtd() + 1);
+
+        try {
+            livroDAO.atualizar(emprestimo.getLivro());
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar quantidade do livro no banco de dados", e); 
+        }
+
+        try {
+            emprestimoDAO.atualizar(emprestimo);
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar empréstimo no banco de dados", e);
+        }
+
     }
 
     private boolean livroComIdExiste(int id) {
