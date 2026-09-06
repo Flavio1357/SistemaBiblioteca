@@ -954,6 +954,6 @@ Essas funcionalidades não fazem parte da versão atual e podem ser implementada
 
 ---
 
-# 👨‍💻 Autor
+# 👨‍💻 Autor: Flávio da Silva Franca Filho
 
 Projeto desenvolvido como parte dos estudos em **Ciência da Computação**, com foco em Java, Programação Orientada a Objetos, JDBC, PostgreSQL e desenvolvimento de aplicações com persistência de dados.
